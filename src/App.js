@@ -5,6 +5,7 @@ const Game = styled.div`
   max-width: 400px;
   margin: 0 auto;
   text-align: center;
+  flex-direction: column;
 `;
 const Descr = styled.div`
   color: #666;
@@ -23,7 +24,7 @@ const NumbersWrap = styled.div`
   width: 100%;
   margin: 10px auto;
 `;
-const ANumber = styled.div`
+const StyledNumber = styled.div`
   border: thin solid lightgrey;
   background-color: #eee;
   width: 40%;
@@ -43,21 +44,31 @@ const Timer = styled.div`
   font-size: 150%;
 `;
 
+const randomNumberBetween = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+class Number extends Component {
+  render() {
+    return <StyledNumber>{this.props.value}</StyledNumber>;
+  }
+}
+
 class App extends Component {
+  challengeNumbers = Array.from({ length: this.props.challengeSize }).map(() =>
+    randomNumberBetween(...this.props.challengeRange)
+  );
+
   render() {
     return (
-      <Game>
+      <Game challengeSize={6} challengeRange={[2, 9]}>
         <Descr>
           Pick 4 numbers that total the target number within the time limit
         </Descr>
-        <Target>42</Target>
+        <Target>{this.target}</Target>
         <NumbersWrap>
-          <ANumber>1</ANumber>
-          <ANumber>2</ANumber>
-          <ANumber>3</ANumber>
-          <ANumber>4</ANumber>
-          <ANumber>5</ANumber>
-          <ANumber>6</ANumber>
+          {this.challengeNumbers.map((value, index) => (
+            <Number key={index} value={value} />
+          ))}
         </NumbersWrap>
         <FooterWrap>
           <Timer>15</Timer>
